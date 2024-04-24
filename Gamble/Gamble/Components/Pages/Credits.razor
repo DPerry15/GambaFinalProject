@@ -1,0 +1,22 @@
+﻿@page "/credits"
+@rendermode InteractiveServer
+
+<h3>Credits</h3>
+<style>
+    body {
+        background-color: #ffcbd1;
+    }
+</style>
+
+<p role="status">Current count: @Creds</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click for one credit</button>
+
+@code {
+    private int Creds = 0;
+
+    private void IncrementCount()
+    {
+        Creds++;
+    }
+}
