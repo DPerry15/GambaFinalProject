@@ -48,3 +48,17 @@ def get_items_from_case(case_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Case not found")
     
     return [case_item.item for case_item in case.case_items]
+
+@app.get("/items", response_model=list[ItemRead])
+def get_items(db: Session = Depends(get_db)):
+    return db.query(Item).all() 
+
+@app.get("/caseitems/{case_id}", response_model=CaseItemsRead)
+def get_case_items(case_id: int, db: Session = Depends(get_db)):
+    try:
+        case_items = db.query(Cases_Items).filter(Cases_Items.CaseID == case_id).all()
+        if not case_items:
+            raise HTTPException(status_code=404, detail="Items not found for this case")
+        return case_items
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid case_id provided. Please provide a valid integer.")
