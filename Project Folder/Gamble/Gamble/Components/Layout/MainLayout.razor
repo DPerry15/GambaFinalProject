@@ -1,0 +1,30 @@
+﻿@inherits LayoutComponentBase
+@using Gamble.Components.Models
+@inject CreditsData creditService
+
+<div class="page">
+    <div style="background-image:none;background-color:#541E1B;" class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div style="background-image:none;background-color:#541A1C; text-emphasis-color; color: #999999" class="top-row px-4">
+            <p>Credits: @creditService.CreditsCount</p>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+
+<div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss"></a>
+</div>
+
+@code {
+
+}

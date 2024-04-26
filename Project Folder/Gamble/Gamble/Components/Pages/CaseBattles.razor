@@ -1,0 +1,74 @@
+﻿@page "/casebattles"
+@rendermode InteractiveServer
+
+<link href="Casebattles.razor.css" rel="stylesheet" />
+@using System;
+@using System.Collections.Generic;
+@using System.Threading.Tasks
+
+<h1>CSGO Case Opening Spinner</h1>
+<div class="spinner-container">
+    <div class="spinner" @ref="spinnerRef">
+        <div class="item-container" style="transform: rotate(@currentDegrees) translate(0, -50%)">
+            @foreach (var item in items)
+            {
+                <div class="item">@item</div>
+            }
+        </div>
+    </div>
+</div>
+<div class="button-container">
+    <button @onclick="Spin" disabled="@isSpinning">Spin</button>
+</div>
+
+@code {
+    private ElementReference spinnerRef;
+    private List<string> items = new List<string>
+    {
+        "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6", "Item 7", "Item 8", "Item 9", "Item 10"
+    };
+
+    private bool isSpinning = false;
+    private int currentDegrees = 0;
+    private int spinDuration = 5000; // in milliseconds
+    private int framesPerSecond = 60;
+    private int frameCount => spinDuration / 1000 * framesPerSecond;
+
+    private async Task Spin()
+    {
+        if (isSpinning)
+        {
+            return;
+        }
+
+        isSpinning = true;
+
+        var random = new Random();
+        var selectedDegrees = random.Next(360, 720); // Random degrees between 1 and 2 full spins
+
+        await SpinAnimation(selectedDegrees);
+
+        // Calculate the selected item based on the final angle
+        var selectedItemIndex = (int)Math.Floor(((currentDegrees + selectedDegrees) % 360) / 36.0);
+
+        // Display the selected item or perform any other action
+        Console.WriteLine($"Selected item: {items[selectedItemIndex]}");
+
+        isSpinning = false;
+    }
+
+    private async Task SpinAnimation(int selectedDegrees)
+    {
+        var increment = selectedDegrees / frameCount;
+
+        for (int i = 0; i < frameCount; i++)
+        {
+            currentDegrees += increment;
+            await Task.Delay(1000 / framesPerSecond);
+            await InvokeAsync(StateHasChanged); // Update UI
+        }
+
+        currentDegrees %= 360; // Normalize the angle
+        await InvokeAsync(StateHasChanged); // Update UI
+    }
+}

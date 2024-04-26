@@ -1,0 +1,25 @@
+﻿@page "/credits"
+@rendermode InteractiveServer
+@inject CreditsData creditService
+
+
+@using Gamble.Components.Models
+
+<h3>Credits</h3>
+
+<p role="status">@localCreditsCount Credits will be added when you exit the page</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click for one credit</button>
+
+@code {
+
+    public int localCreditsCount { get; set; } = 0; // Local variable for display
+
+    public void IncrementCount()
+    {
+
+        localCreditsCount++;  // Update local count for immediate display
+        creditService.IncrementCount();
+        StateHasChanged();
+    }
+}
